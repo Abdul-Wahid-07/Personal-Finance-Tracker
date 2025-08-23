@@ -17,11 +17,10 @@ import { useState } from "react";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     income: "",
     password: "",
-    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -31,6 +30,7 @@ export default function SignupPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    handleDashboard()
     // TODO: Connect this to your backend signup API
   };
 
@@ -64,8 +64,8 @@ export default function SignupPage() {
             <label className="block text-gray-700 mb-2">Username</label>
             <input
               type="text"
-              name="name"
-              value={formData.name}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
@@ -117,23 +117,9 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Confirm Password */}
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              minLength="6"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
-              placeholder="••••••••"
-            />
-          </div>
-
           {/* Submit button */}
           <button
+            href="/dashboard"
             type="submit"
             className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-lg font-semibold transition duration-200"
           >
