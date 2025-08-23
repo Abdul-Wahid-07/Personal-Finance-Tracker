@@ -7,14 +7,22 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import cors from "cors";
 
 dotenv.config();
-
 const app = express();
+
+const corsOptions = {
+    origin: "http://localhost:3000",
+    methods: "GET, POST, PUT, PATCH, DELETE, HEAD",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
-app.use(cors({
-    origin: "http://localhost:3000/signup",
-    credentials: true,
-}));
+// app.use(cors({
+//     origin: "http://localhost:3000/signup",
+//     credentials: true,
+// }));
 
 
 app.use("/api/auth", router);

@@ -1,38 +1,61 @@
-// import React from 'react'
-
-// const SignUp = () => {
-//   return (
-//     <>
-//         <h1>SignUp Page</h1>
-//     </>
-//   )
-// }
-
-// export default SignUp
-
-
-
 "use client"
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    income: "",
+    income: 0,
     password: "",
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setFormData({ 
+      ...formData,
+      [name]: name === "income"? Number(value) : value,
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    handleDashboard()
-    // TODO: Connect this to your backend signup API
-  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Form submitted:", formData);
+
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/register",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if(response.status == 201){
+      setFormData({
+        username: "",
+        email: "",
+        income: 0,
+        password: "",
+      })
+      router.push("/login");
+      
+    }
+
+    console.log("Response:", response);
+  } catch (error) {
+    console.error("Error:", error.response ? error.response.data : error.message);
+  }
+};
+
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -119,7 +142,6 @@ export default function SignupPage() {
 
           {/* Submit button */}
           <button
-            href="/dashboard"
             type="submit"
             className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-lg font-semibold transition duration-200"
           >

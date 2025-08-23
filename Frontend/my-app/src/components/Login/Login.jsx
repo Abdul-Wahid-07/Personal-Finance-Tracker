@@ -12,8 +12,6 @@
 
 
 
-// pages/login.jsx  (Next.js)
-// If using React, just render <LoginPage /> in App.js
 "use client"
 import { useState } from "react";
 
