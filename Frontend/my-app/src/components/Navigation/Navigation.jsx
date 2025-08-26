@@ -42,11 +42,20 @@ export default function Navigation() {
         {/* Navigation Menu */}
         <nav>
           <ul className="hidden md:flex gap-6 text-gray-700 font-medium">
-            <li>
-              <Link href="/" className="hover:text-indigo-600 transition">
-                Home
-              </Link>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <Link href="/dashboard" className="hover:text-indigo-600 transition">
+                  Home
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link href="/" className="hover:text-indigo-600 transition">
+                  Home
+                </Link>
+              </li>
+            )}
+            
             <li>
               <Link href="/about" className="hover:text-indigo-600 transition">
                 About
