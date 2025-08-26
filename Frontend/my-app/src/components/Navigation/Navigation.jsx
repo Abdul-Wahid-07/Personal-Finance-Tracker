@@ -117,11 +117,19 @@ export default function Navigation() {
       {/* Mobile Menu */}
       <div className="md:hidden bg-gray-50 border-t">
         <ul className="flex flex-col p-4 space-y-3 text-gray-700 font-medium">
-          <li>
-            <Link href="/" className="hover:text-indigo-600 transition">
-              Home
-            </Link>
-          </li>
+          {isLoggedIn ? (
+              <li>
+                <Link href="/dashboard" className="hover:text-indigo-600 transition">
+                  Home
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link href="/" className="hover:text-indigo-600 transition">
+                  Home
+                </Link>
+              </li>
+            )}
           <li>
             <Link href="/about" className="hover:text-indigo-600 transition">
               About
