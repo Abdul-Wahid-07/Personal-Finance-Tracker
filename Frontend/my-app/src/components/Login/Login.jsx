@@ -1,34 +1,53 @@
-// import React from 'react'
-
-// const Login = () => {
-//   return (
-//     <>
-//         <h1>Login Page</h1>
-//     </>
-//   )
-// }
-
-// export default Login
-
-
-
 "use client"
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "../Auth/Auth";
 
 export default function LoginPage() {
+    const router = useRouter();
+
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+const { storeTokenInLS } = useAuth();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Login data:", formData);
-    // TODO: Connect this to your backend login API
+
+    try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if(response.status == 200){
+      storeTokenInLS(response.data.token)
+      setFormData({
+        email: "",
+        password: "",
+      })
+      router.push("/dashboard");
+      
+    }
+
+    console.log("Response:", response);
+  } catch (error) {
+    console.error("Error:", error.response ? error.response.data : error.message);
+  }
   };
 
   return (

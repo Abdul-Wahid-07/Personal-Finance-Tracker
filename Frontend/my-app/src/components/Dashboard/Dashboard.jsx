@@ -1,15 +1,3 @@
-// import React from 'react'
-
-// const Dashboard = () => {
-//   return (
-//     <>
-//     <h1>Dashboard Page</h1>
-//     </>
-//   )
-// }
-
-// export default Dashboard
-
 "use client";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
@@ -24,17 +12,17 @@ export default function Dashboard() {
     categories: []
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("/api/finance/dashboard"); // backend route
-        setData(res.data);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await axios.get("/api/finance/dashboard"); // backend route
+  //       setData(res.data);
+  //     } catch (error) {
+  //       console.error("Error fetching dashboard data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
