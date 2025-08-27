@@ -98,6 +98,7 @@ export default function Dashboard() {
             onChange={handleChange}
             required
             className="border rounded-xl p-2"
+            min={0}
           />
           <select
             name="type"
