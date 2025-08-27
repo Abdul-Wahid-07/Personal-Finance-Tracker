@@ -1,16 +1,3 @@
-// import React from 'react'
-
-// const Services = () => {
-//   return (
-//     <>
-//         <h1>Services Page</h1>
-//     </>
-//   )
-// }
-
-// export default Services
-
-
 import { BarChart3, Wallet, TrendingUp } from "lucide-react";
 
 export default function Services() {

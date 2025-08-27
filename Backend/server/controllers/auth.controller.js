@@ -81,15 +81,5 @@ const contact = async (req, res) => {
     }
 }
 
-// dashboard logic
-// const dashboard = async (req, res) => {
-//     try {
-//         res.status(200).json({msg: "Dashboard"})
-//     } catch (error) {
-//         // next(error)
-//         res.status(500).json({msg: "Dashboard Error"})
-//     }
-// }
-
 export default { home, register, login, contact };
 

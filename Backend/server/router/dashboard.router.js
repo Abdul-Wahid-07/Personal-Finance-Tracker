@@ -1,6 +1,6 @@
 import express from "express";
 import Transaction from "../models/Transaction.model.js";
-import User from "../models/user.model.js";  // 👈 Import User model
+import User from "../models/user.model.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
