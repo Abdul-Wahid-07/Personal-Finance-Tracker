@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import Contact from "../models/contact.model.js";
 
@@ -50,7 +49,6 @@ const login = async (req, res) => {
             return res.status(400).json({msg: "Invalid Credentials"});
         }
 
-        // const check_password = await bcrypt.compare(password, UserExist.password);
         const check_password = await UserExist.comparePassword(password);
 
         if(check_password){
@@ -82,6 +80,16 @@ const contact = async (req, res) => {
         next(error);
     }
 }
+
+// dashboard logic
+// const dashboard = async (req, res) => {
+//     try {
+//         res.status(200).json({msg: "Dashboard"})
+//     } catch (error) {
+//         // next(error)
+//         res.status(500).json({msg: "Dashboard Error"})
+//     }
+// }
 
 export default { home, register, login, contact };
 

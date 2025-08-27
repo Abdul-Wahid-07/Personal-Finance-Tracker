@@ -28,10 +28,10 @@ export default function Navigation() {
         {/* Logo & Title */}
         <div className="flex items-center space-x-2">
           <Image
-            src="/logo.png" // place your logo image inside public folder
+            src="/logo.png"
             alt="Finance Tracker Logo"
-            width={40}
-            height={40}
+            width={50}
+            height={50}
             className="rounded-full"
           />
           <span className="text-xl font-bold text-indigo-600">

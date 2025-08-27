@@ -19,10 +19,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // isAdmin:{
-    //     type: Boolean,
-    //     default: false,
-    // },
 });
 
 // securing password using bcrypt
@@ -52,7 +48,7 @@ userSchema.methods.generateToken = async function () {
             {
                 userId: this._id.toString(),
                 email: this.email,
-                isAdmin: this.isAdmin,
+                income: this.income,
             },
             process.env.JWT_SECRET_KEY,
             {

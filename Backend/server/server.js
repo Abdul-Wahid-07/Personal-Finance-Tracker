@@ -1,10 +1,11 @@
-
 import express from "express";
 import router from "./router/auth.router.js";
 import dotenv from "dotenv";
 import connectDb from "./config/db.config.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import cors from "cors";
+import dashboardRoutes from "./router/dashboard.router.js";
+import transactionRoutes from "./router/transaction.router.js";
 
 dotenv.config();
 const app = express();
@@ -19,13 +20,9 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-// app.use(cors({
-//     origin: "http://localhost:3000/signup",
-//     credentials: true,
-// }));
-
-
 app.use("/api/auth", router);
+app.use("/api/auth/dashboard", dashboardRoutes);
+app.use("/api/auth/transactions", transactionRoutes);
 
 app.use(errorMiddleware);
 

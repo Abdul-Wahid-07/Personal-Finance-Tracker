@@ -11,18 +11,51 @@ export default function Dashboard() {
     transactions: [],
     categories: []
   });
+  const [form, setForm] = useState({ description: "", amount: "", type: "income", category: "" });
+  const [showAll, setShowAll] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await axios.get("/api/finance/dashboard"); // backend route
-  //       setData(res.data);
-  //     } catch (error) {
-  //       console.error("Error fetching dashboard data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/auth/dashboard/", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setData(res.data);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Handle input
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Submit transaction
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:5000/api/transactions/add",
+        {
+          description: form.description,
+          amount: Number(form.amount),
+          type: form.type,
+          category: form.type === "expense" ? form.category : "Income"
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setForm({ description: "", amount: "", type: "income", category: "" }); // reset form
+      fetchData(); // refresh dashboard
+    } catch (err) {
+      console.error("Error adding transaction:", err.response?.data || err.message);
+    }
+  };
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -44,6 +77,56 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Add Transaction Form */}
+      <div className="bg-white shadow-lg rounded-2xl p-4">
+        <h2 className="text-lg font-semibold mb-4">Add Income / Expense</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={form.description}
+            onChange={handleChange}
+            required
+            className="border rounded-xl p-2"
+          />
+          <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={handleChange}
+            required
+            className="border rounded-xl p-2"
+          />
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            className="border rounded-xl p-2"
+          >
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+          {form.type === "expense" && (
+            <input
+              type="text"
+              name="category"
+              placeholder="Category (Food, Rent, etc.)"
+              value={form.category}
+              onChange={handleChange}
+              className="border rounded-xl p-2"
+            />
+          )}
+          <button
+            type="submit"
+            className="bg-blue-600 text-white rounded-xl px-4 py-2 hover:bg-blue-700 md:col-span-4"
+          >
+            Add Transaction
+          </button>
+        </form>
+      </div>
+
       {/* Chart + Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart */}
@@ -61,10 +144,7 @@ export default function Dashboard() {
                 label
               >
                 {data.categories.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -76,12 +156,9 @@ export default function Dashboard() {
         <div className="bg-white shadow-lg rounded-2xl p-4">
           <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
           <ul className="space-y-3">
-            {data.transactions.length > 0 ? (
-              data.transactions.map((t, idx) => (
-                <li
-                  key={idx}
-                  className="flex justify-between items-center border-b pb-2"
-                >
+            {(showAll ? data.transactions : data.transactions.slice(0, 5)).length > 0 ? (
+              (showAll ? data.transactions : data.transactions.slice(0, 5)).map((t, idx) => (
+                <li key={idx} className="flex justify-between items-center border-b pb-2">
                   <span className="font-medium">{t.description}</span>
                   <span
                     className={`${
@@ -96,12 +173,14 @@ export default function Dashboard() {
               <p className="text-gray-500">No transactions found</p>
             )}
           </ul>
-          <button className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
-            View All
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+          >
+            {showAll ? "Show Less" : "View All"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-

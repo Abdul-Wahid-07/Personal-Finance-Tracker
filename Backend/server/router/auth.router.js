@@ -9,6 +9,8 @@ router.route("/").get(authcontrollers.home);
 router.route("/register").post( validate(schema.signupSchema), authcontrollers.register);
 router.route("/login").post( validate(schema.loginSchema),authcontrollers.login);
 router.route("/contact").post( validate(schema.contactSchema),authcontrollers.contact);
+// router.route("/dashboard").post( validate(schema.dashboardSchema),authcontrollers.dashboard);
+// router.route("/dashboard").post(authcontrollers.dashboard);
 
 export default router;
 
