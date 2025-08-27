@@ -5,7 +5,7 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// ✅ GET Dashboard data
+// get dashboard data
 router.route("/").get(authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userId;

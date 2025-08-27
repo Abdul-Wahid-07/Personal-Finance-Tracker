@@ -1,17 +1,3 @@
-// import React from 'react'
-
-// const Home = () => {
-//   return (
-//     <>
-//         <h1>Home Page</h1>
-//     </>
-//   )
-// }
-
-// export default Home
-
-
-
 "use client";
 import { BarChart3, Lock, TrendingUp, Wallet } from "lucide-react";
 import { Pie } from "react-chartjs-2";

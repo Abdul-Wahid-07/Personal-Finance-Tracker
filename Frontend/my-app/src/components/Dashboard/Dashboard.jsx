@@ -41,7 +41,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/api/transactions/add",
+        "http://localhost:5000/api/auth/transactions/add",
         {
           description: form.description,
           amount: Number(form.amount),
