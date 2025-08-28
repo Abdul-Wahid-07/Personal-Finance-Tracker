@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function SignupPage() {
   const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -30,7 +31,7 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/auth/register",
+      `${API_URL}/api/auth/register`,
       formData,
       {
         headers: {

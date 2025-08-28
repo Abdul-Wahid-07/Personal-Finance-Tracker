@@ -6,6 +6,7 @@ import { useAuth } from "../Auth/Auth";
 
 export default function LoginPage() {
     const router = useRouter();
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const { storeTokenInLS } = useAuth();
 
     try {
     const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      `${API_URL}/api/auth/login`,
       formData,
       {
         headers: {

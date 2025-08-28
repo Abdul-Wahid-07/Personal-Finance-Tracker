@@ -18,7 +18,7 @@ const authMiddleware = (req, res, next) => {
       }
 
       // 4. Attach decoded user info to request
-      console.log("Decoded JWT:", decoded); 
+      // console.log("Decoded JWT:", decoded);
       req.user = decoded; // e.g., { id, email }
       next();
     });

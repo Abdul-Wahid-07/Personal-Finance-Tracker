@@ -4,6 +4,9 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import axios from "axios";
 
 export default function Dashboard() {
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const [data, setData] = useState({
     balance: 0,
     income: 0,
@@ -17,7 +20,7 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/auth/dashboard/", {
+      const res = await axios.get(`${API_URL}/api/auth/dashboard/`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(res.data);
@@ -43,7 +46,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/api/auth/transactions/add",
+        `${API_URL}/api/auth/transactions/add`,
         {
           description: form.description,
           amount: Number(form.amount),
