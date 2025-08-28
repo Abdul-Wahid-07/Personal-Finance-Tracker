@@ -1,15 +1,16 @@
 "use client"
 import { useAuth } from '@/components/Auth/Auth';
-import Dashboard from '@/components/Dashboard/Dashboard';
 import Home from '@/components/Home/Home';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const page = () => {
+  const r = useRouter();
   const { isLoggedIn } = useAuth();
   return (
     <>
       {isLoggedIn ? (
-        <Dashboard />
+        r.push("/dashboard")
       ) : (
         <Home />
       )}

@@ -57,7 +57,7 @@ router.route("/").get(authMiddleware, async (req, res) => {
       baseIncome,       // 👈 also return separately if you want
       additionalIncome, // 👈 also return separately if you want
       expenses,
-      transactions: transactions.slice(0, 5), // recent 5
+      transactions: transactions.slice(0, transactions.length),
       categories
     });
   } catch (err) {
