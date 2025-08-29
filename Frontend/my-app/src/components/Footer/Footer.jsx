@@ -1,9 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { BarChart3, Lock, TrendingUp, Wallet } from "lucide-react";
+import { useAuth } from "../Auth/Auth";
 
 export default function Footer() {
   const router = useRouter();
+
+  const { isLoggedIn } = useAuth();
 
   return (
     <footer className="bg-gray-100 text-gray-700 border-t mt-8">
@@ -36,16 +39,34 @@ export default function Footer() {
             </li>
             <li
               className="hover:text-blue-500 cursor-pointer"
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/services")}
             >
-              Login
+              Services
             </li>
-            <li
+            {isLoggedIn ? (
+              <li
               className="hover:text-blue-500 cursor-pointer"
-              onClick={() => router.push("/signup")}
-            >
-              Signup
-            </li>
+              onClick={() => router.push("/logout")}
+              >
+                Logout
+              </li>
+            ) : (
+              <>
+              <li
+              className="hover:text-blue-500 cursor-pointer"
+              onClick={() => router.push("/login")}
+              >
+                Login
+              </li>
+              <li
+                className="hover:text-blue-500 cursor-pointer"
+                onClick={() => router.push("/signup")}
+              >
+                Signup
+              </li>
+              </>
+            )}
+            
           </ul>
         </div>
 

@@ -1,38 +1,67 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../Auth/Auth";
 
 export default function Logout() {
   const router = useRouter();
   const { LogoutUser } = useAuth();
+  const [isConfirming, setIsConfirming] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  useEffect(() => {
+  const handleConfirm = () => {
+    setIsConfirming(false);
+    setIsLoggingOut(true);
     LogoutUser();
 
     // redirect after short delay
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       router.push("/login");
-    }, 4000);
+    }, 3000);
+  };
 
-    return () => clearTimeout(timer);
-  }, [router, LogoutUser]);
+  const handleCancel = () => {
+    router.push("/dashboard"); // send back to dashboard if cancel
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
       <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-sm w-full">
-        {/* Spinner */}
-        <div className="flex justify-center mb-4">
-          <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
+        {isConfirming ? (
+          <>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Are you sure you want to logout?
+            </h2>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleConfirm}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+              >
+                Yes, Logout
+              </button>
+              <button
+                onClick={handleCancel}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        ) : isLoggingOut && (
+          <>
+            {/* Spinner */}
+            <div className="flex justify-center mb-4">
+              <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
 
-        {/* Text */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          Logging you out...
-        </h2>
-        <p className="text-gray-500 text-sm">
-          Please wait while we safely log you out.
-        </p>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Logging you out...
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Please wait while we safely log you out.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
