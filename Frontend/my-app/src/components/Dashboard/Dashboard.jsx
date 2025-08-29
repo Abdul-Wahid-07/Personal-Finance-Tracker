@@ -62,7 +62,11 @@ export default function Dashboard() {
     }
   };
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  // const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = data.categories.map((_, i) => 
+    `hsl(${(i * 360) / data.categories.length}, 70%, 50%)`
+  );
+
 
   return (
     <div className="p-4 md:p-8 grid gap-6">
@@ -156,6 +160,19 @@ export default function Dashboard() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
+
+          {/* Legend with colored dots */}
+          <div className="mt-4 flex flex-wrap gap-4 justify-center">
+            {data.categories.map((cat, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <span
+                  className="w-3 h-3 rounded-full inline-block"
+                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                ></span>
+                <span className="text-sm font-medium">{cat.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Recent Transactions */}
