@@ -1,20 +1,23 @@
-"use client"
+"use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "../Auth/Auth";
 
 export default function LoginPage() {
-    const router = useRouter();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
+  const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-const { storeTokenInLS } = useAuth();
+  const [message, setMessage] = useState(""); // backend message
+  const [isError, setIsError] = useState(false); // track error vs success
+  const [loading, setLoading] = useState(false); // optional loading state
+
+  const { storeTokenInLS } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,33 +25,44 @@ const { storeTokenInLS } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login data:", formData);
+    setMessage("");
+    setLoading(true);
 
     try {
-    const response = await axios.post(
-      `${API_URL}/api/auth/login`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await axios.post(
+        `${API_URL}/api/auth/login`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        storeTokenInLS(response.data.token);
+
+        setIsError(false);
+        setMessage(response.data.message || "Login successful");
+
+        setFormData({
+          email: "",
+          password: "",
+        });
+
+        // redirect after short delay
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1500);
       }
-    );
-
-    if(response.status == 200){
-      storeTokenInLS(response.data.token)
-      setFormData({
-        email: "",
-        password: "",
-      })
-      router.push("/dashboard");
-      
+    } catch (error) {
+      setIsError(true);
+      setMessage(
+        error.response?.data?.message || "Invalid email or password"
+      );
+    } finally {
+      setLoading(false);
     }
-
-    console.log("Response:", response);
-  } catch (error) {
-    console.error("Error:", error.response ? error.response.data : error.message);
-  }
   };
 
   return (
@@ -75,6 +89,19 @@ const { storeTokenInLS } = useAuth();
           <p className="text-gray-500 text-center mt-2 mb-6">
             Access your Personal Finance Tracker account
           </p>
+
+          {/* Success/Error message */}
+          {message && (
+            <div
+              className={`p-3 mb-4 rounded text-sm text-center ${
+                isError
+                  ? "bg-red-100 text-red-700"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
+              {message}
+            </div>
+          )}
 
           {/* Email */}
           <div className="mb-4">
@@ -108,9 +135,14 @@ const { storeTokenInLS } = useAuth();
           {/* Submit button */}
           <button
             type="submit"
-            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-lg font-semibold transition duration-200"
+            disabled={loading}
+            className={`w-full py-2 rounded-lg font-semibold transition duration-200 ${
+              loading
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600 text-white"
+            }`}
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
 
           {/* Signup link */}
@@ -128,4 +160,3 @@ const { storeTokenInLS } = useAuth();
     </div>
   );
 }
-

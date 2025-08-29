@@ -24,7 +24,7 @@ export default function Dashboard() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(res.data);
-      console.log(res.data.transactions);
+      // console.log(res.data.transactions);
       
     } catch (error) {
       console.error("Error fetching dashboard data:", error);

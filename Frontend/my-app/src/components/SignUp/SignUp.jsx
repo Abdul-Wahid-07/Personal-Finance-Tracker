@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -14,56 +14,62 @@ export default function SignupPage() {
     password: "",
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+  const [message, setMessage] = useState(""); // message text
+  const [isError, setIsError] = useState(false); // success or error
 
-    setFormData({ 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
       ...formData,
-      [name]: name === "income"? Number(value) : value,
+      [name]: name === "income" ? Number(value) : value,
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage(""); // clear old messages
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Form submitted:", formData);
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/auth/register`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/auth/register`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (response.status === 201) {
+        setIsError(false);
+        setMessage(response.data.message || "Signup successful! 🎉");
+
+        // reset form
+        setFormData({
+          username: "",
+          email: "",
+          income: 0,
+          password: "",
+        });
+
+        // redirect after short delay
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
       }
-    );
-
-    if(response.status == 201){
-      setFormData({
-        username: "",
-        email: "",
-        income: 0,
-        password: "",
-      })
-      router.push("/login");
-      
+    } catch (error) {
+      setIsError(true);
+      setMessage(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     }
-
-    console.log("Response:", response);
-  } catch (error) {
-    console.error("Error:", error.response ? error.response.data : error.message);
-  }
-};
-
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Left side (illustration) */}
       <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-indigo-500 to-purple-600 items-center justify-center">
         <h1 className="text-white text-4xl font-bold px-8 text-center">
-          Welcome to Personal Finance Tracker  
+          Welcome to Personal Finance Tracker
           <span className="block text-lg font-light mt-3">
             Track, save, and grow your money with ease.
           </span>
@@ -83,7 +89,20 @@ const handleSubmit = async (e) => {
             Start tracking your finances today!
           </p>
 
-          {/* Name */}
+          {/* Success/Error message */}
+          {message && (
+            <div
+              className={`p-3 mb-4 rounded text-sm text-center ${
+                isError
+                  ? "bg-red-100 text-red-700"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
+              {message}
+            </div>
+          )}
+
+          {/* Username */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Username</label>
             <input
@@ -113,7 +132,9 @@ const handleSubmit = async (e) => {
 
           {/* Income */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Monthly Income (INR)</label>
+            <label className="block text-gray-700 mb-2">
+              Monthly Income (INR)
+            </label>
             <input
               type="number"
               name="income"
@@ -164,4 +185,3 @@ const handleSubmit = async (e) => {
     </div>
   );
 }
-
