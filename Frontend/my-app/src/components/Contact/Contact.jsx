@@ -1,4 +1,5 @@
 "use client"
+import axios from "axios";
 import { useState } from "react";
 
 export default function Contact() {
@@ -8,15 +9,35 @@ export default function Contact() {
     message: "",
   });
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const res = await axios.post(
+      `${API_URL}/api/auth/contact`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    )
+
+    if(res.status === 200){
+      setFormData({
+        username: "",
+        email: "",
+        message: "",
+      })
+    }
+
     console.log("Contact data:", formData);
     alert("Message send successfully")
-    // TODO: Connect this to your backend login API
   };
 
 
