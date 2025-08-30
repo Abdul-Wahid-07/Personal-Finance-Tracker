@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -14,8 +16,7 @@ export default function SignupPage() {
     password: "",
   });
 
-  const [message, setMessage] = useState(""); // message text
-  const [isError, setIsError] = useState(false); // success or error
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +28,6 @@ export default function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); // clear old messages
 
     try {
       const response = await axios.post(
@@ -39,8 +39,8 @@ export default function SignupPage() {
       );
 
       if (response.status === 201) {
-        setIsError(false);
-        setMessage(response.data.message || "Signup successful! 🎉");
+        toast.success(response.data.message || "Signup successful!");
+        toast.info("Please Login to continue")
 
         // reset form
         setFormData({
@@ -50,17 +50,10 @@ export default function SignupPage() {
           password: "",
         });
 
-        // redirect after short delay
-        setTimeout(() => {
-          router.push("/login");
-        }, 1500);
+        router.push("/login");
       }
     } catch (error) {
-      setIsError(true);
-      setMessage(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
+      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -88,19 +81,6 @@ export default function SignupPage() {
           <p className="text-gray-500 text-center mt-2 mb-6">
             Start tracking your finances today!
           </p>
-
-          {/* Success/Error message */}
-          {message && (
-            <div
-              className={`p-3 mb-4 rounded text-sm text-center ${
-                isError
-                  ? "bg-red-100 text-red-700"
-                  : "bg-green-100 text-green-700"
-              }`}
-            >
-              {message}
-            </div>
-          )}
 
           {/* Username */}
           <div className="mb-4">
@@ -148,18 +128,25 @@ export default function SignupPage() {
           </div>
 
           {/* Password */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-gray-700 mb-2">Password</label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
               minLength="6"
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none pr-10"
               placeholder="••••••••"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-11 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+            </button>
           </div>
 
           {/* Submit button */}

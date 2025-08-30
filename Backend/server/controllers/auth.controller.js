@@ -18,7 +18,7 @@ const register = async (req, res) => {
         const UserExist = await User.findOne({ email })
 
         if(UserExist){
-            return res.status(400).json({msg: "user already exist"});
+            return res.status(400).json({message: "user already exist"});
         }
 
         // to save to database we can .save() or .create() method;
@@ -26,7 +26,7 @@ const register = async (req, res) => {
 
         res.status(201).json(
             {
-                msg: "registration successful",
+                message: "Signup successful",
                 token: await newUser.generateToken(),
                 userId: newUser._id.toString(),
             }
@@ -54,7 +54,7 @@ const login = async (req, res) => {
         if(check_password){
             res.status(200).json(
                 {
-                    msg: "Login Successful",
+                    message: "Login Successful",
                     token: await UserExist.generateToken(),
                     userId: UserExist._id.toString(),
                 }
