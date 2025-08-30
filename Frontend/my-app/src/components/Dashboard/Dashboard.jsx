@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
 
@@ -45,7 +46,7 @@ export default function Dashboard() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      const res = await axios.post(
         `${API_URL}/api/auth/transactions/add`,
         {
           description: form.description,
@@ -55,10 +56,15 @@ export default function Dashboard() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setForm({ description: "", amount: "", type: "income", category: "" }); // reset form
-      fetchData(); // refresh dashboard
+      
+      if(res.status === 201){
+        toast.success("Transaction added successfully");
+        setForm({ description: "", amount: "", type: "income", category: "" }); // reset form
+        fetchData(); // refresh dashboard
+      }
     } catch (err) {
-      console.error("Error adding transaction:", err.response?.data || err.message);
+      console.error(err.response?.data || err.message);
+      toast.error(err.response?.data || err.message);
     }
   };
 

@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "../Auth/Auth";
+import { toast } from "react-toastify";
 
 export default function Logout() {
   const router = useRouter();
@@ -17,11 +18,13 @@ export default function Logout() {
     // redirect after short delay
     setTimeout(() => {
       router.push("/login");
+      toast.success("Logged out successfully");
     }, 3000);
   };
 
   const handleCancel = () => {
     router.push("/dashboard"); // send back to dashboard if cancel
+    // toast.success("Send back to dashboard");
   };
 
   return (

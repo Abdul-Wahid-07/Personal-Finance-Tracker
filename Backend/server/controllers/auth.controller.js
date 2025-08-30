@@ -18,7 +18,7 @@ const register = async (req, res) => {
         const UserExist = await User.findOne({ email })
 
         if(UserExist){
-            return res.status(400).json({message: "user already exist"});
+            return res.status(400).json({message: "User already exist"});
         }
 
         // to save to database we can .save() or .create() method;

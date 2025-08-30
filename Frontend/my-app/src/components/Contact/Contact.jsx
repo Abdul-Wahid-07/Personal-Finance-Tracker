@@ -1,6 +1,7 @@
 "use client"
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,29 +19,32 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(
-      `${API_URL}/api/auth/contact`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const res = await axios.post(
+        `${API_URL}/api/auth/contact`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          }
         }
+      )
+
+      if(res.status === 200){
+        toast.success("Message send successfully");
+        setFormData({
+          username: "",
+          email: "",
+          message: "",
+        })
       }
-    )
 
-    if(res.status === 200){
-      setFormData({
-        username: "",
-        email: "",
-        message: "",
-      })
-    }
-
-    console.log("Contact data:", formData);
-    alert("Message send successfully")
+      console.log("Contact data:", formData); 
+    } catch (error) {
+      console.log(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Error sending message");      
+    } 
   };
-
-
 
   return (
     <main className="bg-gray-50 min-h-screen flex items-center justify-center px-4 py-10">
