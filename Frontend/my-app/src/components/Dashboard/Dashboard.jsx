@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function Dashboard() {
+const Dashboard = () => {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -213,3 +213,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;

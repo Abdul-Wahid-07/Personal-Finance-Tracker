@@ -1,9 +1,10 @@
 "use client"
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useAuth } from "../Auth/Auth";
 
-export default function Contact() {
+function Contact() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -11,6 +12,20 @@ export default function Contact() {
   });
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  const { user, isLoggedIn } = useAuth();
+
+  useEffect(() => {
+    if(isLoggedIn && user){
+      setFormData({
+        username: user.username,
+        email: user.email,
+        message: "",
+      });
+
+    }
+  }, [user, isLoggedIn]);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,8 +48,8 @@ export default function Contact() {
       if(res.status === 200){
         toast.success("Message send successfully");
         setFormData({
-          username: "",
-          email: "",
+          username: user.username || "",
+          email: user.email || "",
           message: "",
         })
       }
@@ -120,10 +135,12 @@ export default function Contact() {
         {/* Contact Info */}
         <div className="mt-10 text-center text-gray-600">
           <p>Email: <span className="text-indigo-600">support@financetracker.com</span></p>
-          <p>Phone: <span className="text-indigo-600">+91 01010 10101</span></p>
+          {/* <p>Phone: <span className="text-indigo-600">+91 01010 10101</span></p> */}
         </div>
       </div>
     </main>
   );
 }
+
+export default Contact;
 
