@@ -41,7 +41,7 @@ export default function Home() {
     <main className="bg-gray-50 text-gray-800">
       
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center py-16 md:py-20 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+      <section className="flex flex-col items-center justify-center text-center py-16 md:py-20 px-4 bg-gradient-to-b from-indigo-500 to-purple-600 text-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
           Track Your Money. Achieve Your Goals.
         </h1>
@@ -74,8 +74,12 @@ export default function Home() {
         <p className="max-w-xl mx-auto mb-8 text-gray-600 text-sm sm:text-base">
           Instantly visualize your finances. Here’s a sneak peek of our interactive dashboard.
         </p>
-        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 max-w-4xl mx-auto">
-          <Pie data={chartData} options={chartOptions} />
+        
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 max-w-4xl mx-auto flex justify-center">
+          {/* Smaller Pie Chart */}
+          <div className="w-48 h-48 sm:w-56 sm:h-56">
+            <Pie data={chartData} options={chartOptions} />
+          </div>
         </div>
       </section>
 

@@ -113,7 +113,7 @@ const Dashboard = () => {
             onChange={handleChange}
             required
             className="border rounded-xl p-2"
-            min={0}
+            min={1}
           />
           <select
             name="type"
