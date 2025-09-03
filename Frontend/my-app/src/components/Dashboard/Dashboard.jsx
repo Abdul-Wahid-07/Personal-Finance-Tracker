@@ -119,7 +119,7 @@ const Dashboard = () => {
             name="type"
             value={form.type}
             onChange={handleChange}
-            className="border rounded-xl p-2"
+            className="border rounded-xl p-2 cursor-pointer"
           >
             <option value="income">Income</option>
             <option value="expense">Expense</option>
@@ -136,7 +136,7 @@ const Dashboard = () => {
           )}
           <button
             type="submit"
-            className="bg-blue-600 text-white rounded-xl px-4 py-2 hover:bg-blue-700 md:col-span-4"
+            className="bg-blue-600 text-white rounded-xl px-4 py-2 hover:bg-blue-700 md:col-span-4 cursor-pointer"
           >
             Add Transaction
           </button>
@@ -204,7 +204,7 @@ const Dashboard = () => {
           </ul>
           <button
             onClick={() => setShowAll(!showAll)}
-            className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+            className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 cursor-pointer"
           >
             {showAll ? "Show Less" : "View All"}
           </button>
