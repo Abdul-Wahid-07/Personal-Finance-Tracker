@@ -6,7 +6,7 @@ import { useAuth } from "../Auth/Auth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-export default function LoginPage() {
+const LoginPage = () => {
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -148,3 +148,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default LoginPage;

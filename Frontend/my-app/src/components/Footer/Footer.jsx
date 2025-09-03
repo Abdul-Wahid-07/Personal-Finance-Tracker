@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { BarChart3, Lock, TrendingUp, Wallet } from "lucide-react";
 import { useAuth } from "../Auth/Auth";
 
-export default function Footer() {
+const Footer = () => {
   const router = useRouter();
 
   const { isLoggedIn } = useAuth();
@@ -97,3 +97,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default Footer;

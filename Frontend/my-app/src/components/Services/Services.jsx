@@ -1,6 +1,6 @@
 import { BarChart3, Wallet, TrendingUp } from "lucide-react";
 
-export default function Services() {
+const Services = () => {
   return (
     <main className="bg-gray-50 text-gray-800 min-h-screen">
       
@@ -48,3 +48,5 @@ export default function Services() {
     </main>
   );
 }
+
+export default Services;

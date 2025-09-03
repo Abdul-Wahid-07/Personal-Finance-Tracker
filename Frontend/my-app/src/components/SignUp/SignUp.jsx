@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-export default function SignupPage() {
+const SignupPage = () => {
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -172,3 +172,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+export default SignupPage;

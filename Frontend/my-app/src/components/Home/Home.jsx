@@ -5,7 +5,7 @@ import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from "chart.js";
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
-export default function Home() {
+const Home = () => {
   // Demo chart data
   const chartData = {
     labels: ["Food", "Transport", "Bills", "Entertainment", "Savings"],
@@ -117,3 +117,5 @@ function FeatureCard({ icon, title, desc }) {
     </div>
   );
 }
+
+export default Home;

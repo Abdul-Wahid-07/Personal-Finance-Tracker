@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "../Auth/Auth";
 import { toast } from "react-toastify";
 
-export default function Logout() {
+const Logout = () => {
   const router = useRouter();
   const { LogoutUser } = useAuth();
   const [isConfirming, setIsConfirming] = useState(true);
@@ -69,3 +69,5 @@ export default function Logout() {
     </div>
   );
 }
+
+export default Logout;

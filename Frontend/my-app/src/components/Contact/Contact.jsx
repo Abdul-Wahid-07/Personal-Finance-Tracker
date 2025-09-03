@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../Auth/Auth";
 
-function Contact() {
+const Contact = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "../Auth/Auth";
 
-export default function Navigation() {
+const Navigation = () => {
   const r = useRouter();
 
   const { isLoggedIn } = useAuth();
@@ -41,7 +41,7 @@ export default function Navigation() {
 
         {/* Navigation Menu */}
         <nav>
-          <ul className="hidden md:flex gap-6 text-gray-700 font-medium">
+          <ul className="hidden md:flex gap-6 text-gray-700 font-medium items-center">
             {isLoggedIn ? (
               <li>
                 <Link href="/dashboard" className="hover:text-indigo-600 transition">
@@ -185,4 +185,6 @@ export default function Navigation() {
     </header>
   );
 }
+
+export default Navigation;
 
