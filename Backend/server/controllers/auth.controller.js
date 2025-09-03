@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Contact from "../models/contact.model.js";
+import {sendEmail} from "../services/emailservice.js"
 
 const home = async (req, res) => {
     try {
@@ -21,8 +22,22 @@ const register = async (req, res) => {
             return res.status(400).json({message: "User already exist"});
         }
 
+        const email_res = await sendEmail(
+                            email,
+                            "Welcome to My App 🎉",
+                            "Thanks for signing up!",
+                            `<h1>Welcome! ${username}</h1><p>Thanks for joining us 🚀</p>`
+                            );
+        
+        if(!email_res){
+            res.status(400).json({ message: "Something went wrong! Please try again" });
+        }
+
         // to save to database we can .save() or .create() method;
-        const newUser = await User.create({ username, email, income, password });
+        const newUser = await User.create({ username, 
+            email,
+            income,
+            password });
 
         res.status(201).json(
             {
@@ -32,8 +47,8 @@ const register = async (req, res) => {
             }
         );
     } catch (error) {
-        // res.status(500).json({ msg: "internal server error" });
-        next(error);
+        res.status(500).json({ message: "internal server error" });
+        // next(error);
     }
 };
 
@@ -46,7 +61,7 @@ const login = async (req, res) => {
         console.log(UserExist);
 
         if(!UserExist){
-            return res.status(400).json({msg: "Invalid Credentials"});
+            return res.status(400).json({message: "Invalid Credentials"});
         }
 
         const check_password = await UserExist.comparePassword(password);
