@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../Auth/Auth";
@@ -19,15 +19,15 @@ const Dashboard = () => {
   const [form, setForm] = useState({ description: "", amount: "", type: "income", category: "" });
   const [showAll, setShowAll] = useState(false);
   const [username, setUsername] = useState(null);
+  const [trendData, setTrendData] = useState([]);
 
-  const { user, isLoggedIn } = useAuth();
+  const { user } = useAuth();
   
-    useEffect(() => {
-      if (isLoggedIn && user) {
-        setUsername(user.username);
-      }
-    }, [user, isLoggedIn]);
-
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
 
   const fetchData = async () => {
     try {
@@ -36,8 +36,38 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(res.data);
-      // console.log(res.data.transactions);
-      
+
+      // ✅ Prepare trend data from transactions (group by month from createdAt)
+      const grouped = {};
+      res.data.transactions.forEach((t) => {
+        if (t.type === "expense") {
+          if (t.createdAt) {
+            const d = new Date(t.createdAt);
+            if (!isNaN(d)) {
+              // Format as "Aug 2025"
+              const month = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+              grouped[month] = (grouped[month] || 0) + t.amount;
+            }
+          }
+        }
+      });
+
+      // Convert grouped object into array
+      let formatted = Object.keys(grouped).map((month) => {
+        // Parse back into Date for sorting
+        const [mon, year] = month.split(" ");
+        const date = new Date(`${mon} 1, ${year}`);
+        return { month, spending: grouped[month], sortDate: date };
+      });
+
+      // ✅ Sort chronologically by date
+      formatted = formatted.sort((a, b) => a.sortDate - b.sortDate);
+
+      // Remove helper property
+      formatted = formatted.map(({ month, spending }) => ({ month, spending }));
+
+      setTrendData(formatted);
+
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
@@ -74,12 +104,11 @@ const Dashboard = () => {
         fetchData(); // refresh dashboard
       }
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      toast.error(err.response?.data || err.message);
+      console.log(err.response?.data || err.message);
+      toast.error(err.response?.data?.message || err.response?.data || "Failed to add transaction");
     }
   };
 
-  // const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
   const COLORS = data.categories.map((_, i) => 
     `hsl(${(i * 360) / data.categories.length}, 70%, 50%)`
   );
@@ -199,8 +228,23 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Transactions */}
+        {/* Line Chart for Spending Trends */}
         <div className="bg-white shadow-lg rounded-2xl p-4">
+          <h2 className="text-lg font-semibold mb-4">Spending Trends Over Time</h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={trendData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="spending" stroke="#8884d8" strokeWidth={2} dot={{ r: 3 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Recent Transactions */}
+        <div className="bg-white shadow-lg rounded-2xl p-4 lg:col-span-2">
           <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
           <ul className="space-y-3">
             {(showAll ? data.transactions : data.transactions.slice(0, 5)).length > 0 ? (
