@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../Auth/Auth";
 
 const Dashboard = () => {
 
@@ -17,6 +18,16 @@ const Dashboard = () => {
   });
   const [form, setForm] = useState({ description: "", amount: "", type: "income", category: "" });
   const [showAll, setShowAll] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  const { user, isLoggedIn } = useAuth();
+  
+    useEffect(() => {
+      if (isLoggedIn && user) {
+        setUsername(user.username);
+      }
+    }, [user, isLoggedIn]);
+
 
   const fetchData = async () => {
     try {
@@ -76,6 +87,13 @@ const Dashboard = () => {
 
   return (
     <div className="p-4 md:p-8 grid gap-6">
+      {/* Welcome Header */}
+      {username && (
+        <h1 className="text-2xl font-bold">
+          Welcome, <span className="text-blue-600">{username}</span>
+        </h1>
+      )}
+      
       {/* Top Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white shadow-lg rounded-2xl p-4">
