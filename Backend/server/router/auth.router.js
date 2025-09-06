@@ -13,4 +13,3 @@ router.route("/contact").post( validate(schema.contactSchema),authcontrollers.co
 router.route("/user").get( authMiddleware, authcontrollers.user);
 
 export default router;
-

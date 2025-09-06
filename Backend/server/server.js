@@ -6,6 +6,7 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import cors from "cors";
 import dashboardRoutes from "./router/dashboard.router.js";
 import transactionRoutes from "./router/transaction.router.js";
+import pdfRoutes from "./router/pdf.router.js";
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/auth", router);
 app.use("/api/auth/dashboard", dashboardRoutes);
 app.use("/api/auth/transactions", transactionRoutes);
+app.use("/api/pdf", pdfRoutes);
 
 app.use(errorMiddleware);
 

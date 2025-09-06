@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
       const userData = await User.findOne({ email: decoded.email }).select({
         password: 0,
       });
-      console.log(userData);
+      // console.log(userData);
       
 
       // 4. Attach decoded user info to request
