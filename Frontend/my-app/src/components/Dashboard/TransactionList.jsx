@@ -11,7 +11,8 @@ const TransactionList = ({
   downloadPDF,
 }) => {
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 lg:col-span-2">
+    <div className="bg-white shadow-lg rounded-2xl p-4 lg:col-span-2 overflow-x-auto">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <h2 className="text-lg font-semibold mb-4">Recent Transactions</h2>
         <button
@@ -45,49 +46,81 @@ const TransactionList = ({
             const isExpanded = expandedMonths[month] || false;
             return (
               <div key={idx} className="mb-6">
-                <h3 className="text-lg font-semibold text-blue-600 mb-2">
+                {/* Month Header */}
+                <h3 className="text-lg font-semibold text-blue-600 mb-3">
                   {month}
                 </h3>
-                <ul className="space-y-3">
-                  {(isExpanded ? txns : txns.slice(0, 5)).map((t, i) => (
-                    <li
-                      key={i}
-                      className="flex justify-between items-center border-b pb-2"
-                    >
-                      <div>
-                        <span className="font-medium">{t.description}</span>
-                        <span
-                          className={`ml-3 ${
-                            t.type === "income"
-                              ? "text-green-600"
-                              : "text-red-600"
-                          } font-semibold`}
-                        >
-                          {t.type === "income" ? "+" : "-"}₹{t.amount}
-                        </span>
-                      </div>
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => startEdit(t)}
-                          className="px-3 py-1 text-sm bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-gray-200 rounded-lg">
+                    <thead>
+                      <tr className="bg-gray-100 text-left">
+                        <th className="p-3 border border-gray-200">Description</th>
+                        <th className="p-3 border border-gray-200">Amount</th>
+                        <th className="p-3 border border-gray-200">Type</th>
+                        <th className="p-3 border border-gray-200">Created / Updated</th>
+                        <th className="p-3 border border-gray-200 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(isExpanded ? txns : txns.slice(0, 5)).map((t, i) => (
+                        <tr
+                          key={i}
+                          className="hover:bg-gray-50 transition-all duration-200"
                         >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => {
-                            setDeleteId(t._id);
-                            setShowConfirm(true);
-                          }}
-                          className="px-3 py-1 text-sm bg-red-500 text-white rounded-xl hover:bg-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                          <td className="p-3 border border-gray-200 font-medium">
+                            {t.description}
+                          </td>
+                          <td
+                            className={`p-3 border border-gray-200 font-semibold ${
+                              t.type === "income"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {t.type === "income" ? "+" : "-"}₹{t.amount}
+                          </td>
+                          <td className="p-3 border border-gray-200 capitalize">
+                            {t.type}
+                          </td>
+                          <td className="p-3 border border-gray-200 text-sm text-gray-500">
+                            {new Date(
+                              t.updatedAt || t.createdAt
+                            ).toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </td>
+                          <td className="p-3 border border-gray-200 text-center">
+                            <div className="flex justify-center gap-2">
+                              <button
+                                onClick={() => startEdit(t)}
+                                className="px-3 py-1 text-sm bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setDeleteId(t._id);
+                                  setShowConfirm(true);
+                                }}
+                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-xl hover:bg-red-600"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
+                {/* Show More / Show Less */}
                 {txns.length > 5 && (
                   <button
                     onClick={() => toggleMonth(month)}

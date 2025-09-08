@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../Auth/Auth";
@@ -29,8 +29,8 @@ const Dashboard = () => {
   const [editingId, setEditingId] = useState(null);
   const [expandedMonths, setExpandedMonths] = useState({});
   const [userData, setUserdata] = useState({
-    username:null,
-    email:null,
+    username: null,
+    email: null,
   });
   const [trendData, setTrendData] = useState([]);
 
@@ -39,6 +39,9 @@ const Dashboard = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   const { user } = useAuth();
+
+  // 🔹 Ref for scrolling form into view
+  const formRef = useRef(null);
 
   useEffect(() => {
     if (user) {
@@ -57,7 +60,7 @@ const Dashboard = () => {
       });
       setData(res.data);
 
-      // 🔹 Group expenses by month
+      //Group expenses by month
       const grouped = {};
       res.data.transactions.forEach((t) => {
         if (t.type === "expense" && t.createdAt) {
@@ -92,12 +95,12 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // 🔹 Form input handler
+  //Form input handler
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Submit transaction (add or update)
+  //Submit transaction (add or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -150,7 +153,7 @@ const Dashboard = () => {
     }
   };
 
-  // 🔹 Reset form
+  //Reset form
   const resetForm = () => {
     setForm({
       description: "",
@@ -161,7 +164,7 @@ const Dashboard = () => {
     setEditingId(null);
   };
 
-  // 🔹 Delete transaction
+  //Delete transaction
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -176,7 +179,7 @@ const Dashboard = () => {
     }
   };
 
-  // 🔹 Start editing transaction
+  //Start editing transaction
   const startEdit = (txn) => {
     setForm({
       description: txn.description,
@@ -185,10 +188,14 @@ const Dashboard = () => {
       category: txn.type === "expense" ? txn.category : "",
     });
     setEditingId(txn._id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    //Scroll form into view on mobile & desktop
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
-  // 🔹 Expand/Collapse months
+  //Expand/Collapse months
   const toggleMonth = (month) => {
     setExpandedMonths((prev) => ({
       ...prev,
@@ -196,7 +203,7 @@ const Dashboard = () => {
     }));
   };
 
-  // 🔹 Download PDF
+  //Download PDF
   const downloadPDF = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -250,13 +257,15 @@ const Dashboard = () => {
       </div>
 
       {/* Add/Edit Transaction Form */}
-      <TransactionForm
-        form={form}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        editingId={editingId}
-        resetForm={resetForm}
-      />
+      <div ref={formRef}>
+        <TransactionForm
+          form={form}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          editingId={editingId}
+          resetForm={resetForm}
+        />
+      </div>
 
       {/* Charts + Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
