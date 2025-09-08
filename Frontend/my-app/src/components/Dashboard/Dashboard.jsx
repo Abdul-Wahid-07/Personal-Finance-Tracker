@@ -234,7 +234,7 @@ const Dashboard = () => {
               Welcome, <span className="text-blue-600">{userData.username}</span>
             </h1>
             <p className="text-gray-500">
-              Logged in as: <span className="text-blue-600">{userData.email}</span>
+              You are logged in as: <span className="text-blue-600">{userData.email}</span>
             </p>
           </div>
         </div>
