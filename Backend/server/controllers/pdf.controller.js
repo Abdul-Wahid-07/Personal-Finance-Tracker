@@ -17,7 +17,7 @@ export const generateReport = async (req, res) => {
 
     const transactions = await Transaction.find({ userId: userId });
 
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({ margin: 50 });
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
     doc.pipe(res);
@@ -34,6 +34,7 @@ export const generateReport = async (req, res) => {
     doc.text(`Email: ${user.email}`);
     doc.moveDown();
 
+    // Totals
     const default_income = user.income;
 
     let additionalIncome = transactions
@@ -48,28 +49,62 @@ export const generateReport = async (req, res) => {
 
     let balance = totalIncome - totalExpense;
 
-    doc.text(`Income: ₹${totalIncome}`);
-    doc.text(`Expense: ₹${totalExpense}`);
+    doc.fontSize(14).text("Summary", { underline: true });
+    doc.moveDown(0.5);
+    doc.fontSize(12).text(`Base Income: ₹${default_income}`);
+    doc.fontSize(12).text(`Additional Income: ₹${additionalIncome}`);
+    doc.fontSize(12).text(`Total Income: ₹${totalIncome}`);
+    doc.text(`Total Expense: ₹${totalExpense}`);
     doc.text(`Balance: ₹${balance}`);
     doc.moveDown();
 
-    // Transactions
-    doc.fontSize(14).text("Transactions:", { underline: true });
-    doc.moveDown();
+    // Income Transactions
+    const incomeTxns = transactions.filter((t) => t.type === "income");
+    if (incomeTxns.length > 0) {
+      doc.fontSize(14).text("Additional Income Transactions", { underline: true });
+      doc.moveDown(0.5);
+      incomeTxns.forEach((t, i) => {
+        doc.fontSize(12).text(
+          `${i + 1}. ${t.description}  =>  +₹${t.amount}   (${new Date(
+            t.createdAt
+          ).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  })
+                  `
+        );
+      });
+      doc.moveDown();
+    }
 
-    transactions.forEach((t, i) => {
-      doc.fontSize(12).text(
-        `${i + 1}. ${t.description} => ${
-          t.type === "income" ? "+" : "-"
-        } ₹${t.amount} (${new Date(t.createdAt).toLocaleDateString()})`
-      );
-    });
+    // Expense Transactions
+    const expenseTxns = transactions.filter((t) => t.type === "expense");
+    if (expenseTxns.length > 0) {
+      doc.fontSize(14).text("Expense Transactions", { underline: true });
+      doc.moveDown(0.5);
+      expenseTxns.forEach((t, i) => {
+        doc.fontSize(12).text(
+          `${i + 1}. ${t.description}  =>  -₹${t.amount}   (${new Date(
+            t.createdAt
+          ).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  })
+                  `
+        );
+      });
+      doc.moveDown();
+    }
 
     doc.end();
   } catch (error) {
     console.error("PDF generation error:", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Error generating PDF", error: error.message });
+      res
+        .status(500)
+        .json({ message: "Error generating PDF", error: error.message });
     }
   }
 };

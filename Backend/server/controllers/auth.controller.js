@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import Contact from "../models/contact.model.js";
-import { sendEmail } from "../services/emailservice.js"
+import sendEmail from "../services/emailservice.js"
 
 const home = async (req, res) => {
     try {

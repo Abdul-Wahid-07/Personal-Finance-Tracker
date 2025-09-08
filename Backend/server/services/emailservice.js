@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 //  * @param {string} text - Plain text message
 //  * @param {string} html - Optional HTML message
 //  */
-export async function sendEmail(to, subject, text, html = null) {
+const sendEmail = async (to, subject, text, html = null) => {
   try {
     const info = await transporter.sendMail({
       from: `"Finance Tracker" <${process.env.EMAIL_USER}>`,
@@ -35,3 +35,5 @@ export async function sendEmail(to, subject, text, html = null) {
     throw new Error("Email service failed");
   }
 }
+
+export default sendEmail;
