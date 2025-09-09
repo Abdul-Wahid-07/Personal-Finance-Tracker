@@ -34,13 +34,13 @@ const Dashboard = () => {
   });
   const [trendData, setTrendData] = useState([]);
 
-  // 🔹 Modal states
+  //Modal states
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const { user } = useAuth();
 
-  // 🔹 Ref for scrolling form into view
+  //Ref for scrolling form into view
   const formRef = useRef(null);
 
   useEffect(() => {

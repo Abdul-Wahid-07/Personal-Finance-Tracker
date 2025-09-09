@@ -4,7 +4,7 @@ const DeleteConfirmModal = ({ showConfirm, setShowConfirm, handleDelete, deleteI
   if (!showConfirm) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-lg p-6 max-w-sm w-full">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           Confirm Deletion
