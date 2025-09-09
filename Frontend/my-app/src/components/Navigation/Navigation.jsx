@@ -1,26 +1,20 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "../Auth/Auth";
+import { Menu } from "lucide-react";
 
 const Navigation = () => {
   const r = useRouter();
-
   const { isLoggedIn } = useAuth();
 
-  const handleSignupRedirect = () => {
-    r.push("/signup");
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLoginRedirect = () => {
-    r.push("/login");
-  };
-
-  const handleLogoutRedirect = () => {
-    r.push("/logout");
-  };
+  const handleSignupRedirect = () => r.push("/signup");
+  const handleLoginRedirect = () => r.push("/login");
+  const handleLogoutRedirect = () => r.push("/logout");
 
   return (
     <header className="bg-white shadow-md">
@@ -39,7 +33,7 @@ const Navigation = () => {
           </span>
         </div>
 
-        {/* Navigation Menu */}
+        {/* Desktop Menu */}
         <nav>
           <ul className="hidden md:flex gap-6 text-gray-700 font-medium items-center">
             {isLoggedIn ? (
@@ -55,25 +49,19 @@ const Navigation = () => {
                 </Link>
               </li>
             )}
-            
+
             <li>
               <Link href="/about" className="hover:text-indigo-600 transition">
                 About
               </Link>
             </li>
             <li>
-              <Link
-                href="/services"
-                className="hover:text-indigo-600 transition"
-              >
+              <Link href="/services" className="hover:text-indigo-600 transition">
                 Services
               </Link>
             </li>
             <li>
-              <Link
-                href="/contact"
-                className="hover:text-indigo-600 transition"
-              >
+              <Link href="/contact" className="hover:text-indigo-600 transition">
                 Contact
               </Link>
             </li>
@@ -83,7 +71,7 @@ const Navigation = () => {
                 <button
                   onClick={handleLogoutRedirect}
                   type="button"
-                  className="px-4 py-2 cursor-pointer border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
+                  className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
                 >
                   Logout
                 </button>
@@ -91,19 +79,19 @@ const Navigation = () => {
             ) : (
               <>
                 <li>
-                <button
-                  onClick={handleSignupRedirect}
-                  type="button"
-                  className="px-4 py-2 cursor-pointer border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
-                >
-                  SignUp
-                </button>
+                  <button
+                    onClick={handleSignupRedirect}
+                    type="button"
+                    className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
+                  >
+                    SignUp
+                  </button>
                 </li>
                 <li>
                   <button
                     onClick={handleLoginRedirect}
                     type="button"
-                    className="px-4 py-2 cursor-pointer border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
+                    className="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition"
                   >
                     Login
                   </button>
@@ -112,12 +100,21 @@ const Navigation = () => {
             )}
           </ul>
         </nav>
+
+        {/* Mobile Menu Toggle Button */}
+        <button
+          className="md:hidden p-2 text-gray-700"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <Menu size={28} />
+        </button>
       </div>
 
       {/* Mobile Menu */}
-      <div className="md:hidden bg-gray-50 border-t">
-        <ul className="flex flex-col p-4 space-y-3 text-gray-700 font-medium">
-          {isLoggedIn ? (
+      {menuOpen && (
+        <div className="md:hidden bg-gray-50 border-t">
+          <ul className="flex flex-col p-4 space-y-3 text-gray-700 font-medium">
+            {isLoggedIn ? (
               <li>
                 <Link href="/dashboard" className="hover:text-indigo-600 transition">
                   Home
@@ -130,23 +127,23 @@ const Navigation = () => {
                 </Link>
               </li>
             )}
-          <li>
-            <Link href="/about" className="hover:text-indigo-600 transition">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="/services" className="hover:text-indigo-600 transition">
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="hover:text-indigo-600 transition">
-              Contact
-            </Link>
-          </li>
+            <li>
+              <Link href="/about" className="hover:text-indigo-600 transition">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link href="/services" className="hover:text-indigo-600 transition">
+                Services
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-indigo-600 transition">
+                Contact
+              </Link>
+            </li>
 
-          {isLoggedIn ? (
+            {isLoggedIn ? (
               <li>
                 <button
                   onClick={handleLogoutRedirect}
@@ -178,13 +175,11 @@ const Navigation = () => {
                 </li>
               </>
             )}
-
-          
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
     </header>
   );
-}
+};
 
 export default Navigation;
-
